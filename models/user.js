@@ -4,16 +4,31 @@ const schema = mongoose.Schema(
   {
     email: {
       type: String,
+      trim: true,
+      lowercase: true,
       unique: true,
-      match: [/[a-z0-9]+@[a-z0-9]+/, 'user email is not valid'],
+      required: [true, 'Email address is required'],
+      match: [
+        /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/,
+        'Please fill a valid email address',
+      ],
     },
     password: {
       type: String,
-      minLength: [6, 'password should be at least 6 characters long'],
+      trim: true,
+      minLength: [8, 'password should be at least 8 characters long'],
+      required: [true, 'Password is required'],
+    },
+    token: {
+      type: String,
+      default: null,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
     },
   },
   {
-    timestamps: true, // adds createdAt and updatedAt files
     versionKey: false,
   }
 );
