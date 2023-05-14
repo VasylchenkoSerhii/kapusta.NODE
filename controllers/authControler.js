@@ -1,6 +1,10 @@
 const bcrypt = require('bcrypt');
 const { HttpError } = require('../helpers');
 const { User } = require('../models/user');
+const jwt = require('jsonwebtoken');
+const { v4 } = require('uuid');
+
+const { JWT_SECRET } = process.env;
 
 async function register(req, res, next) {
   const { email, password } = req.body;
@@ -9,16 +13,26 @@ async function register(req, res, next) {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
+    const verificationToken = v4();
     const saveUser = await User.create({
       email,
       password: hashedPassword,
+      verificationToken,
     });
 
-    res.status(201).json({
+    // await sendEmail({
+    //   to: email,
+    //   subject: 'Please confirm your email',
+    //   html: `<a target="_blank" href="http://localhost:3000/users/verify/${verificationToken}">Confirm your email</a>`,
+    //   text: `Please, confirm your email address http://localhost:3000/users/verify/${verificationToken}`,
+    // });
+
+    return res.status(201).json({
       data: {
         user: {
           email,
           id: saveUser._id,
+          verificationToken,
         },
       },
     });
@@ -41,20 +55,43 @@ async function login(req, res, next) {
     throw new HttpError(401, 'email is not valid');
   }
 
+  // if (!storeUser.verify) {
+  //   throw new HttpError(
+  //     401,
+  //     "Email is not verified! Please check your mailbox"
+  //   );
+  // }
+
   const isPasswordValid = await bcrypt.compare(password, storeUser.password);
 
   if (!isPasswordValid) {
     throw new HttpError(401, 'password is not valid');
   }
 
+  const payload = { id: storeUser._id };
+  const token = jwt.sign(payload, JWT_SECRET, {
+    expiresIn: '2h',
+  });
+  await User.findByIdAndUpdate(storeUser._id, { token });
+
   return res.json({
-    data: {
-      token: '<TOKEN>',
+    token,
+    user: {
+      email,
+      id: storeUser._id,
     },
   });
 }
 
+const logout = async (req, res, next) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: null });
+
+  return res.status(204).json();
+};
+
 module.exports = {
   register,
   login,
+  logout,
 };
