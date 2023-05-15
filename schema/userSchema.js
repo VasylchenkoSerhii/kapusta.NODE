@@ -15,6 +15,14 @@ const userSchema = Joi.object({
     .required(),
 });
 
+const emailVerifyValidation = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2 })
+    .required()
+    .regex(/@gmail\.com$/),
+});
+
 module.exports = {
   userSchema,
+  emailVerifyValidation,
 };
