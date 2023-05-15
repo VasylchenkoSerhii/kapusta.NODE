@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { HttpError } = require('../helpers');
+const { HttpError, sendEmail } = require('../helpers');
 const { User } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { v4 } = require('uuid');
@@ -20,12 +20,12 @@ async function register(req, res, next) {
       verificationToken,
     });
 
-    // await sendEmail({
-    //   to: email,
-    //   subject: 'Please confirm your email',
-    //   html: `<a target="_blank" href="http://localhost:3000/users/verify/${verificationToken}">Confirm your email</a>`,
-    //   text: `Please, confirm your email address http://localhost:3000/users/verify/${verificationToken}`,
-    // });
+    await sendEmail({
+      to: email,
+      subject: 'Please confirm your email',
+      html: `<a target="_blank" href="http://localhost:3000/users/verify/${verificationToken}">Confirm your email</a>`,
+      text: `Please, confirm your email address http://localhost:3000/users/verify/${verificationToken}`,
+    });
 
     return res.status(201).json({
       data: {
@@ -55,12 +55,12 @@ async function login(req, res, next) {
     throw new HttpError(401, 'email is not valid');
   }
 
-  // if (!storeUser.verify) {
-  //   throw new HttpError(
-  //     401,
-  //     "Email is not verified! Please check your mailbox"
-  //   );
-  // }
+  if (!storeUser.verify) {
+    throw new HttpError(
+      401,
+      'Email is not verified! Please check your mailbox'
+    );
+  }
 
   const isPasswordValid = await bcrypt.compare(password, storeUser.password);
 
@@ -90,8 +90,59 @@ const logout = async (req, res, next) => {
   return res.status(204).json();
 };
 
+const verifyEmail = async (req, res, next) => {
+  const { verificationToken } = req.params;
+
+  const user = await User.findOne({
+    verificationToken,
+  });
+
+  if (!user) {
+    throw new HttpError(404, 'User not found');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+    verificationToken: null,
+  });
+
+  return res.json({
+    message: 'Verification successful',
+  });
+};
+
+const repeatVerifyEmail = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new HttpError(404, 'User not found');
+  }
+
+  if (user.verify) {
+    return res.status(400).json({
+      message: 'Verification has already been passed',
+    });
+  }
+
+  await sendEmail({
+    to: email,
+    subject: 'Please, confirm your email',
+    html: `<a target="_blank" href="http://localhost:3000/users/verify/${user.verificationToken}">Confirm your email</a>`,
+  });
+
+  return res.json({
+    message: 'Verification email success',
+  });
+};
+
 module.exports = {
   register,
   login,
   logout,
+  verifyEmail,
+  repeatVerifyEmail,
 };
