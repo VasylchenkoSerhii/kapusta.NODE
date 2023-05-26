@@ -3,7 +3,7 @@ const Joi = require('joi');
 const userSchema = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2 })
-    .required()
+    // .required()
     .regex(/@gmail\.com$/),
   password: Joi.string()
     .min(8)
@@ -18,7 +18,7 @@ const userSchema = Joi.object({
 const emailVerifyValidation = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2 })
-    .required()
+    // .required()
     .regex(/@gmail\.com$/),
 });
 
