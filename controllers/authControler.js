@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { HttpError, sendEmail } = require('../helpers');
+const { HttpError } = require('../helpers');
 const { User } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { v4 } = require('uuid');
@@ -20,12 +20,12 @@ async function register(req, res, next) {
       verificationToken,
     });
 
-    await sendEmail({
-      to: email,
-      subject: 'Please confirm your email',
-      html: `<a target="_blank" href="http://localhost:3000/users/verify/${verificationToken}">Confirm your email</a>`,
-      text: `Please, confirm your email address http://localhost:3000/users/verify/${verificationToken}`,
-    });
+    // await sendEmail({
+    //   to: email,
+    //   subject: 'Please confirm your email',
+    //   html: `<a target="_blank" href="http://localhost:3000/users/verify/${verificationToken}">Confirm your email</a>`,
+    //   text: `Please, confirm your email address http://localhost:3000/users/verify/${verificationToken}`,
+    // });
 
     return res.status(201).json({
       data: {
@@ -55,12 +55,12 @@ async function login(req, res, next) {
     throw new HttpError(401, 'email is not valid');
   }
 
-  if (!storeUser.verify) {
-    throw new HttpError(
-      401,
-      'Email is not verified! Please check your mailbox'
-    );
-  }
+  // if (!storeUser.verify) {
+  //   throw new HttpError(
+  //     401,
+  //     'Email is not verified! Please check your mailbox'
+  //   );
+  // }
 
   const isPasswordValid = await bcrypt.compare(password, storeUser.password);
 
@@ -128,11 +128,11 @@ const repeatVerifyEmail = async (req, res, next) => {
     });
   }
 
-  await sendEmail({
-    to: email,
-    subject: 'Please, confirm your email',
-    html: `<a target="_blank" href="http://localhost:3000/users/verify/${user.verificationToken}">Confirm your email</a>`,
-  });
+  // await sendEmail({
+  //   to: email,
+  //   subject: 'Please, confirm your email',
+  //   html: `<a target="_blank" href="http://localhost:3000/users/verify/${user.verificationToken}">Confirm your email</a>`,
+  // });
 
   return res.json({
     message: 'Verification email success',
