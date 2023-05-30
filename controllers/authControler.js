@@ -90,6 +90,14 @@ const logout = async (req, res, next) => {
   return res.status(204).json();
 };
 
+const getCurrentUser = async (req, res, next) => {
+  const { email } = req.user;
+
+  return res.status(200).json({
+    email,
+  });
+};
+
 const verifyEmail = async (req, res, next) => {
   const { verificationToken } = req.params;
 
@@ -143,6 +151,7 @@ module.exports = {
   register,
   login,
   logout,
+  getCurrentUser,
   verifyEmail,
   repeatVerifyEmail,
 };
