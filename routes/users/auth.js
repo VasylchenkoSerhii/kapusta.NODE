@@ -5,6 +5,7 @@ const {
   logout,
   verifyEmail,
   repeatVerifyEmail,
+  getCurrentUser,
 } = require('../../controllers/authControler');
 
 const authRouter = express.Router();
@@ -23,6 +24,7 @@ authRouter.post(
 );
 authRouter.post('/login', validateBody(userSchema), tryCatchWrapper(login));
 authRouter.get('/logout', auth, tryCatchWrapper(logout));
+authRouter.get('/current', auth, tryCatchWrapper(getCurrentUser));
 authRouter.get('/verify/:verificationToken', tryCatchWrapper(verifyEmail));
 authRouter.post(
   '/verify',
