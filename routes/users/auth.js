@@ -23,8 +23,12 @@ authRouter.post(
   tryCatchWrapper(register)
 );
 authRouter.post('/login', validateBody(userSchema), tryCatchWrapper(login));
-authRouter.get('/logout', auth, tryCatchWrapper(logout));
-authRouter.get('/current', auth, tryCatchWrapper(getCurrentUser));
+authRouter.get('/logout', tryCatchWrapper(auth), tryCatchWrapper(logout));
+authRouter.get(
+  '/current',
+  tryCatchWrapper(auth),
+  tryCatchWrapper(getCurrentUser)
+);
 authRouter.get('/verify/:verificationToken', tryCatchWrapper(verifyEmail));
 authRouter.post(
   '/verify',
