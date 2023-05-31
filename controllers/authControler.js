@@ -3,6 +3,7 @@ const { HttpError } = require('../helpers');
 const { User } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { v4 } = require('uuid');
+const { getUser } = require('../services/userService');
 
 const { JWT_SECRET } = process.env;
 
@@ -87,14 +88,23 @@ const logout = async (req, res, next) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: null });
 
-  return res.status(204).json();
+  return res.status(204).json({
+    message: 'No Content',
+  });
 };
 
 const getCurrentUser = async (req, res, next) => {
-  const { email } = req.user;
+  if (!req.user) {
+    return next(HttpError(404, 'No user found'));
+  }
+  if (!req.user.token) {
+    return next(HttpError(401, 'Not authorized'));
+  }
+  const { email, token } = await getUser(req.user);
 
   return res.status(200).json({
     email,
+    token,
   });
 };
 

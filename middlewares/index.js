@@ -23,13 +23,17 @@ async function auth(req, res, next) {
       throw HttpError(401, 'token type is not valid');
     }
 
+    if (!token) {
+      throw HttpError(401, 'no token provided');
+    }
+
     const { id } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(id);
 
     if (!user || !user.token) {
       throw HttpError(401, 'Not authorized');
     }
-
+    req.token = token;
     req.user = user;
     next();
   } catch (err) {
