@@ -23,6 +23,10 @@ const schema = mongoose.Schema(
       type: String,
       default: null,
     },
+    balance: {
+      type: String,
+      default: false,
+    },
     verify: {
       type: Boolean,
       default: false,
@@ -34,6 +38,7 @@ const schema = mongoose.Schema(
   },
   {
     versionKey: false,
+    timestamps: true,
   }
 );
 
