@@ -2,6 +2,7 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 
+const { transactionsRouter } = require('./routes/users/transactions');
 const { authRouter } = require('./routes/users/auth');
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 // app.use('/public', express.static('public'));
 
+app.use('/transactions', transactionsRouter);
 app.use('/users', authRouter);
 
 app.use((err, req, res, next) => {

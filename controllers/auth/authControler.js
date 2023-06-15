@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
-const { HttpError } = require('../helpers');
-const { User } = require('../models/user');
+const { HttpError } = require('../../helpers');
+const { User } = require('../../models/user');
 const jwt = require('jsonwebtoken');
 const { v4 } = require('uuid');
 
@@ -72,14 +72,16 @@ async function login(req, res, next) {
   const token = jwt.sign(payload, JWT_SECRET, {
     expiresIn: '2h',
   });
-  await User.findByIdAndUpdate(storeUser._id, { token });
+  const user = await User.findByIdAndUpdate(
+    storeUser._id,
+    { token },
+    { new: true }
+  );
 
-  return res.json({
-    token,
-    user: {
-      email,
-      id: storeUser._id,
-    },
+  return res.status(200).json({
+    token: user.token,
+    balance: user.balance,
+    email: user.email,
   });
 }
 
@@ -103,10 +105,14 @@ const verifyEmail = async (req, res, next) => {
     throw new HttpError(404, 'User not found');
   }
 
-  await User.findByIdAndUpdate(user._id, {
-    verify: true,
-    verificationToken: null,
-  });
+  await User.findByIdAndUpdate(
+    user._id,
+    {
+      verify: true,
+      verificationToken: null,
+    },
+    { new: true }
+  );
 
   return res.json({
     message: 'Verification successful',

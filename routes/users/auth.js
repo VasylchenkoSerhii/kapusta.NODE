@@ -5,7 +5,7 @@ const {
   logout,
   verifyEmail,
   repeatVerifyEmail,
-} = require('../../controllers/authControler');
+} = require('../../controllers/auth/authControler');
 
 const authRouter = express.Router();
 
