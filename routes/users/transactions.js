@@ -1,5 +1,5 @@
 const express = require('express');
-const { HttpError } = require('../../helpers');
+const { tryCatchWrapper } = require('../../helpers');
 const { auth } = require('../../middlewares/auth');
 const {
   addTransactionValitation,
@@ -11,18 +11,22 @@ const {
 
 const transactionsRouter = express.Router();
 
-transactionsRouter.use(HttpError(auth));
+transactionsRouter.use(tryCatchWrapper(auth));
 transactionsRouter.post(
   '/expenses',
   addTransactionValitation,
-  HttpError(addTransactionController)
+  tryCatchWrapper(addTransactionController)
 );
 transactionsRouter.post(
   '/income',
   addTransactionValitation,
-  HttpError(addTransactionController)
+  tryCatchWrapper(addTransactionController)
 );
 transactionsRouter.delete(
   '/:transactionId',
-  HttpError(deleteTransactionController)
+  tryCatchWrapper(deleteTransactionController)
 );
+
+module.exports = {
+  transactionsRouter,
+};
