@@ -9,7 +9,7 @@ const getUser = async ({ _id, token }, next) => {
   return user;
 };
 
-const updateBalance = async (_id, token, balance, next) => {
+const updateBalance = async ({ _id, token, balance }, next) => {
   const user = await User.findOneAndUpdate(
     { _id, token },
     { $set: { balance } },
