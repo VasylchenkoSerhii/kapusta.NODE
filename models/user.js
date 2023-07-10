@@ -21,11 +21,11 @@ const schema = mongoose.Schema(
     },
     token: {
       type: String,
-      default: null,
+      // default: null,
     },
     balance: {
       type: String,
-      default: false,
+      default: null,
     },
     verify: {
       type: Boolean,
