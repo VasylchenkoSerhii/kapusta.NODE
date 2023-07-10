@@ -40,7 +40,7 @@ authRouter.post(
   tryCatchWrapper(repeatVerifyEmail)
 );
 authRouter.patch(
-  '/users/balance',
+  '/balance',
   tryCatchWrapper(auth),
   tryCatchWrapper(userBalanceValidation),
   tryCatchWrapper(updateUserBalance)

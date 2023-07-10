@@ -35,13 +35,13 @@ async function auth(req, res, next) {
     }
     req.token = token;
     req.user = user;
-    next();
   } catch (err) {
     if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
       throw HttpError(401, 'Jwt token is not valid');
     }
-    next(err);
+    throw err;
   }
+  next();
 }
 
 module.exports = {
