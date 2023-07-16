@@ -3,15 +3,18 @@ const { tryCatchWrapper } = require('../../helpers');
 const { auth } = require('../../middlewares/auth');
 const {
   addTransactionValitation,
+  addIdValitation,
 } = require('../../middlewares/transactionValidation');
 const {
   addTransactionController,
   deleteTransactionController,
+  getAllTransactionsController,
 } = require('../../controllers/transactions/transactionController');
 
 const transactionsRouter = express.Router();
 
 transactionsRouter.use(tryCatchWrapper(auth));
+transactionsRouter.get('/', tryCatchWrapper(getAllTransactionsController));
 transactionsRouter.post(
   '/expenses',
   addTransactionValitation,
@@ -24,6 +27,7 @@ transactionsRouter.post(
 );
 transactionsRouter.delete(
   '/:transactionId',
+  addIdValitation,
   tryCatchWrapper(deleteTransactionController)
 );
 

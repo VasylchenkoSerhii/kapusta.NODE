@@ -30,7 +30,7 @@ const schema = mongoose.Schema(
   { versionKey: false, timestamps: true }
 );
 
-const Transactions = mongoose.model('transaction', schema);
+const Transactions = mongoose.model('transactions', schema);
 
 module.exports = {
   Transactions,
