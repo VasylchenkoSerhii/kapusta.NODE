@@ -4,12 +4,18 @@ const { auth } = require('../../middlewares/auth');
 const {
   addTransactionValitation,
   addIdValitation,
+  mothsResultsValidation,
 } = require('../../middlewares/transactionValidation');
 const {
   addTransactionController,
   deleteTransactionController,
   getAllTransactionsController,
 } = require('../../controllers/transactions/transactionController');
+const {
+  incomeMonths,
+  expensesMonths,
+  fullStatistics,
+} = require('../../controllers/transactions/date');
 
 const transactionsRouter = express.Router();
 
@@ -29,6 +35,22 @@ transactionsRouter.delete(
   '/:transactionId',
   addIdValitation,
   tryCatchWrapper(deleteTransactionController)
+);
+transactionsRouter.post(
+  '/incomeMonths',
+  mothsResultsValidation,
+  tryCatchWrapper(incomeMonths)
+);
+transactionsRouter.post(
+  '/expensesMonths',
+  mothsResultsValidation,
+  tryCatchWrapper(expensesMonths)
+);
+
+transactionsRouter.post(
+  '/fullStatistics',
+  mothsResultsValidation,
+  tryCatchWrapper(fullStatistics)
 );
 
 module.exports = {
