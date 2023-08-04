@@ -1,7 +1,7 @@
-import { Transactions } from '../../models/transactions';
+const { Transactions } = require('../../models/transactions');
 const { HttpError } = require('../../helpers');
 
-export const incomeMonths = async (req, res, next) => {
+const incomeMonths = async (req, res, next) => {
   if (!req.user) return next(HttpError(404, 'No users found'));
   if (!req.user.token) return next(HttpError(401, 'Not authorized'));
   const { currentMonth, year } = req.body;
@@ -69,3 +69,4 @@ export const incomeMonths = async (req, res, next) => {
   result.sort((a, b) => a.month - b.month);
   return res.status(200).json(result);
 };
+module.exports = incomeMonths;
