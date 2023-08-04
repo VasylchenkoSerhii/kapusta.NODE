@@ -1,7 +1,7 @@
-import { HttpError } from '../../helpers';
-import { Transactions } from '../../models/transactions';
+const { Transactions } = require('../../models/transactions');
+const { HttpError } = require('../../helpers');
 
-export const fullStatistics = async (req, res, next) => {
+const fullStatistics = async (req, res, next) => {
   if (!req.user) return next(HttpError(404, 'No users found'));
   if (!req.user.token) return next(HttpError(401, 'Not authorized'));
   const { currentMonth, year } = req.body;
@@ -198,3 +198,4 @@ export const fullStatistics = async (req, res, next) => {
     },
   });
 };
+module.exports = fullStatistics;
