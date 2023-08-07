@@ -20,6 +20,10 @@ const {
   updateUserBalance,
   getCurrentUser,
 } = require('../../controllers/auth/userController');
+const {
+  googleAuthController,
+  googleRedirectController,
+} = require('../../controllers/auth/googleAuthControler');
 
 authRouter.post(
   '/register',
@@ -45,6 +49,8 @@ authRouter.patch(
   tryCatchWrapper(userBalanceValidation),
   tryCatchWrapper(updateUserBalance)
 );
+authRouter.get('/google', tryCatchWrapper(googleAuthController));
+authRouter.get('/google-redirct', tryCatchWrapper(googleRedirectController));
 
 module.exports = {
   authRouter,
