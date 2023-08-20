@@ -9,7 +9,7 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BACK_URL, FRONT_URL } =
 const googleAuthController = async (req, res, next) => {
   const stringifiedParams = queryString.stringify({
     client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: `${BACK_URL}/api/auth/google-redirect`,
+    redirect_uri: `${BACK_URL}/users/google-redirect`,
     scope: [
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile',
@@ -37,7 +37,7 @@ const googleRedirectController = async (req, res, next) => {
     data: {
       client_id: GOOGLE_CLIENT_ID,
       client_secret: GOOGLE_CLIENT_SECRET,
-      redirect_uri: `${BACK_URL}/api/auth/google-redirect`,
+      redirect_uri: `${BACK_URL}/users/google-redirect`,
       grant_type: 'authorization_code',
       code,
     },
