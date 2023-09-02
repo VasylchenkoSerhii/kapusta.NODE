@@ -50,7 +50,7 @@ authRouter.patch(
   tryCatchWrapper(updateUserBalance)
 );
 authRouter.get('/google', tryCatchWrapper(googleAuthController));
-authRouter.get('/google-redirct', tryCatchWrapper(googleRedirectController));
+authRouter.get('/google-redirect', tryCatchWrapper(googleRedirectController));
 
 module.exports = {
   authRouter,
