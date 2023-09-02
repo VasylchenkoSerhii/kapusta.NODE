@@ -8,23 +8,23 @@ const schema = mongoose.Schema(
     },
     dateTransaction: {
       type: Date,
-      required: [true, 'date transaction is required'],
+      require: [true, 'date transaction is required'],
     },
     income: {
       type: Boolean,
-      required: [true, 'income is required'],
+      require: [true, 'income is required'],
     },
     sum: {
       type: Number,
-      required: [true, 'sum is required'],
+      require: [true, 'sum is required'],
     },
     category: {
       type: String,
-      required: [true, 'category is required'],
+      require: [true, 'category is required'],
     },
     description: {
       type: String,
-      required: [true, 'description is required'],
+      require: [true, 'description is required'],
     },
   },
   { versionKey: false, timestamps: true }
