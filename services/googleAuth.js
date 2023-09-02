@@ -14,10 +14,10 @@ const googleUserLogin = async email => {
     });
   }
   const storedUser = await User.findOne({ email });
-  const token = jwt.sing({ id: storedUser._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
     expiresIn: '10h',
   });
-  const googleAuthorizedUser = await User.findByAndUpdate(
+  const googleAuthorizedUser = await User.findByIdAndUpdate(
     storedUser._id,
     { token },
     { new: true }
